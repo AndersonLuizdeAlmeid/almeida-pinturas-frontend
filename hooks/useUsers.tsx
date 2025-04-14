@@ -11,35 +11,35 @@ export const useUsers = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const fetchUsers = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const token = await AsyncStorage.getItem(TOKEN_KEY);
+      if (!token) throw new Error();
+
+      const response = await fetch(`${API_URL}/Users`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) throw new Error();
+
+      const data = await response.json();
+      setUsers(data);
+    } catch {
+      toast.error("Email ou senha incorretos!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const token = await AsyncStorage.getItem(TOKEN_KEY);
-        if (!token) throw new Error();
-
-        const response = await fetch(`${API_URL}/Users`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) throw new Error();
-
-        const data = await response.json();
-        setUsers(data);
-      } catch {
-        toast.error("Email ou senha incorretos!");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUsers();
   }, []);
 
-  return { users, loading, error };
+  return { users, loading, error, fetchUsers };
 };

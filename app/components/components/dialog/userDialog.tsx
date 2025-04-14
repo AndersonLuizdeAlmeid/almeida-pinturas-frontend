@@ -5,20 +5,25 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/app/components/components/ui/dialog";
 import { Input } from "@/app/components/components/ui/input";
 import { Button } from "@/app/components/components/ui/button";
-import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { User } from "@/types/User";
+import { formatDateForInput } from "@/utils/dateUtils";
 
 export default function UserDialog({
   onSave,
+  user,
+  onClose,
+  open,
 }: {
   onSave: (user: User) => void;
+  user?: User | null;
+  onClose: () => void;
+  open: boolean;
 }) {
-  const [newUser, setNewUser] = useState({
+  const [newUser, setNewUser] = useState<User>({
     id: 0,
     name: "",
     cpf: "",
@@ -30,41 +35,144 @@ export default function UserDialog({
     isActive: 1,
   });
 
+  useEffect(() => {
+    if (user) {
+      console.log(user);
+      setNewUser({ ...user });
+    } else {
+      setNewUser({
+        id: 0,
+        name: "",
+        cpf: "",
+        email: "",
+        password: "123456",
+        phoneNumber: "",
+        birthdayDate: "",
+        address: "",
+        isActive: 1,
+      });
+    }
+  }, [user, open]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewUser({ ...newUser, [e.target.name]: e.target.value });
   };
 
   const handleSave = () => {
     onSave(newUser);
+    onClose();
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <button className="fixed bottom-6 right-6 bg-card-foreground text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition">
-          <Plus size={24} />
-        </button>
-      </DialogTrigger>
-      <DialogContent>
+    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
+      <DialogContent className="sm:max-w-[500px] rounded-2xl p-6">
         <DialogHeader>
-          <DialogTitle>Adicionar Funcionário</DialogTitle>
+          <DialogTitle className="text-2xl font-semibold text-primary">
+            {user ? "Editar Funcionário" : "Adicionar Funcionário"}
+          </DialogTitle>
         </DialogHeader>
-        <div className="space-y-3">
-          <Input name="name" placeholder="Nome" onChange={handleChange} />
-          <Input name="cpf" placeholder="CPF" onChange={handleChange} />
-          <Input name="email" placeholder="Email" onChange={handleChange} />
-          <Input
-            name="phoneNumber"
-            placeholder="Telefone"
-            onChange={handleChange}
-          />
-          <Input type="date" name="birthdayDate" onChange={handleChange} />
-          <Input
-            name="address"
-            placeholder="Endereço"
-            onChange={handleChange}
-          />
-          <Button className="w-full" onClick={handleSave}>
+
+        <div className="grid gap-4 mt-4">
+          <div className="grid gap-2">
+            <label
+              className="text-sm font-medium text-foreground"
+              htmlFor="name"
+            >
+              Nome
+            </label>
+            <Input
+              id="name"
+              name="name"
+              placeholder="Fulano de Tal"
+              value={newUser.name}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <label
+              className="text-sm font-medium text-foreground"
+              htmlFor="cpf"
+            >
+              CPF
+            </label>
+            <Input
+              id="cpf"
+              name="cpf"
+              placeholder="02774572028"
+              value={newUser.cpf}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <label
+              className="text-sm font-medium text-foreground"
+              htmlFor="email"
+            >
+              Email
+            </label>
+            <Input
+              id="email"
+              name="email"
+              placeholder="example@example.com"
+              value={newUser.email}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <label
+              className="text-sm font-medium text-foreground"
+              htmlFor="phoneNumber"
+            >
+              Telefone
+            </label>
+            <Input
+              id="phoneNumber"
+              name="phoneNumber"
+              placeholder="54 997020255"
+              value={newUser.phoneNumber}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <label
+              className="text-sm font-medium text-foreground"
+              htmlFor="birthdayDate"
+            >
+              Data de Nascimento
+            </label>
+            <Input
+              id="birthdayDate"
+              type="date"
+              name="birthdayDate"
+              value={formatDateForInput(newUser.birthdayDate)}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <label
+              className="text-sm font-medium text-foreground"
+              htmlFor="address"
+            >
+              Endereço
+            </label>
+            <Input
+              id="address"
+              name="address"
+              placeholder="Evaristo Canal, 186 - CB"
+              value={newUser.address}
+              onChange={handleChange}
+            />
+          </div>
+
+          <Button
+            className="w-full mt-4 bg-primary text-primary-foreground hover:bg-primary/90"
+            onClick={handleSave}
+          >
             Salvar
           </Button>
         </div>
