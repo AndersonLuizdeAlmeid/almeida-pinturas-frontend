@@ -12,18 +12,45 @@ import {
 } from "@/app/components/components/ui/dialog";
 import Layout from "../layout-bar";
 import { toast } from "sonner";
-
-type Wall = {
-  width: number;
-  height: number;
-  area: number;
-};
+import {
+  CreateMeasureRequest,
+  MeasureResponse,
+  SeparateMeasureRequest,
+  Wall,
+} from "@/types/Measure";
+import { useMeasure } from "@/hooks/useMeasure";
+import { useEffect } from "react";
+import { Trash } from "lucide-react";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/components/ui/card";
 
 export default function CalculatePage() {
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
   const [walls, setWalls] = useState<Wall[]>([]);
   const [confirmClearOpen, setConfirmClearOpen] = useState(false);
+  const { createMeasure, getMeasures, deleteMeasure } = useMeasure();
+  const [measures, setMeasures] = useState<MeasureResponse[]>([]);
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [description, setDescription] = useState("");
+  const [reload, setIsReload] = useState(false);
+
+  const fetchMeasures = async () => {
+    if (reload) {
+      const result = await getMeasures();
+      setMeasures(result);
+      setIsReload(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMeasures();
+  }, [reload]);
 
   const handleAddWall = () => {
     const parsedWidth = parseFloat(width);
@@ -52,13 +79,48 @@ export default function CalculatePage() {
     setConfirmClearOpen(false);
   };
 
+  const handleSave = async () => {
+    if (walls.length === 0) {
+      toast.error("Nenhuma parede adicionada para salvar.");
+      return;
+    }
+
+    const payload: CreateMeasureRequest = {
+      description: description || "Cálculo automático", // usa a descrição digitada
+      area: totalArea,
+      separates: walls.map((wall) => ({
+        width: wall.width,
+        height: wall.height,
+      })),
+    };
+
+    await createMeasure(payload);
+    setWalls([]);
+    setIsReload(true);
+  };
+
+  const handleDeleteMeasure = async (id: number) => {
+    await deleteMeasure(id);
+    setIsReload(true);
+  };
+
   const totalArea = walls.reduce((sum, wall) => sum + wall.area, 0);
 
   return (
     <Layout>
       <div className="max-w-2xl mx-auto py-10 space-y-6">
-        <h1 className="text-2xl font-bold">Cálculo de Metragem Cúbica</h1>
-
+        <div className="flex items-center justify-center">
+          <Card className="w-full  max-w-md shadow-lg rounded-xl bg-white">
+            <CardHeader className="flex flex-col items-center text-center">
+              <CardTitle className="text-2xl font-bold card-foreground">
+                ALMEIDA PINTURAS
+              </CardTitle>
+              <CardDescription className="card-foreground">
+                Cálculo de Metragem Cúbica
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </div>
         <div className="grid grid-cols-2 gap-4">
           <Input
             type="number"
@@ -102,34 +164,137 @@ export default function CalculatePage() {
           </div>
 
           {walls.length > 0 && (
-            <Dialog open={confirmClearOpen} onOpenChange={setConfirmClearOpen}>
-              <DialogTrigger asChild>
-                <Button className="w-full bg-red-600 hover:bg-red-700">
-                  Limpar Tudo
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Tem certeza?</DialogTitle>
-                </DialogHeader>
-                <p>Essa ação irá remover todos os cálculos adicionados.</p>
-                <div className="flex justify-end gap-2 pt-4">
-                  <Button
-                    variant="outline"
-                    onClick={() => setConfirmClearOpen(false)}
-                  >
-                    Cancelar
+            <>
+              {/* Dialog para SALVAR CÁLCULO */}
+              <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
+                    Salvar Cálculo
                   </Button>
-                  <Button
-                    className="bg-red-600 hover:bg-red-700"
-                    onClick={handleClearAll}
-                  >
-                    Confirmar
+                </DialogTrigger>
+
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Salvar Cálculo</DialogTitle>
+                  </DialogHeader>
+                  <Input
+                    placeholder="Descrição do cálculo"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                  <div className="flex justify-end gap-2 pt-4">
+                    <Button
+                      variant="outline"
+                      onClick={() => setSaveDialogOpen(false)}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      className="bg-emerald-600 hover:bg-emerald-700"
+                      onClick={async () => {
+                        await handleSave();
+                        setSaveDialogOpen(false);
+                        setDescription("");
+                      }}
+                    >
+                      Confirmar
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+              <Dialog
+                open={confirmClearOpen}
+                onOpenChange={setConfirmClearOpen}
+              >
+                <DialogTrigger asChild>
+                  <Button className="w-full bg-red-600 hover:bg-red-700">
+                    Limpar Tudo
                   </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
+                </DialogTrigger>
+
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Tem certeza?</DialogTitle>
+                  </DialogHeader>
+                  <p>Essa ação irá remover todos os cálculos adicionados.</p>
+                  <div className="flex justify-end gap-2 pt-4">
+                    <Button
+                      variant="outline"
+                      onClick={() => setConfirmClearOpen(false)}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      className="bg-red-600 hover:bg-red-700"
+                      onClick={handleClearAll}
+                    >
+                      Confirmar
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </>
           )}
+
+          <div className="pt-6">
+            <h2 className="text-lg font-semibold mb-2">Medições Salvas</h2>
+            {measures.length === 0 ? (
+              <p className="text-gray-500">Nenhuma medição salva.</p>
+            ) : (
+              <ul className="space-y-3">
+                {measures.map((measure, index) => (
+                  <li
+                    key={measure.id}
+                    className="bg-gray-100 p-3 rounded-lg shadow cursor-pointer"
+                    onClick={() =>
+                      setExpandedIndex(index === expandedIndex ? null : index)
+                    }
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="font-medium">{measure.description}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-600">
+                          {measure.separates.length} separações
+                        </span>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation(); // impedir que o clique expanda
+                            handleDeleteMeasure(parseInt(measure.id));
+                          }}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          <Trash size={16} />
+                        </button>
+                      </div>
+                    </div>
+
+                    {expandedIndex === index && (
+                      <ul className="mt-3 space-y-1 text-sm text-gray-700">
+                        {measure.separates.map(
+                          (s: SeparateMeasureRequest, idx: number) => (
+                            <li
+                              key={idx}
+                              className="flex justify-between border-b border-gray-200 pb-1"
+                            >
+                              <span>
+                                {s.width}m x {s.height}m
+                              </span>
+                              <span>{(s.width * s.height).toFixed(2)} m²</span>
+                            </li>
+                          )
+                        )}
+                        <li className="flex justify-between border-b border-gray-200 bg-blue-300 pb-1 rounded-t">
+                          <span>Area total:</span>
+                          <span>{measure.area.toFixed(2)} m²</span>
+                        </li>
+                      </ul>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
       </div>
     </Layout>

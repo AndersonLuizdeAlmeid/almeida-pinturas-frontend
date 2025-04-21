@@ -36,7 +36,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="flex items-center justify-center h-screen bg-gradient-to-b from-foreground via-foreground to-background">
       <Card className="w-[350px]">
         <CardHeader className="flex flex-col items-center justify-center">
           <img

@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  frontend:
+    image: andersonluizdealmeida1997/almeida-pinturas-frontend:latest
+    container_name: almeida-frontend
+    ports:
+      - "3000:80"
+    restart: always
+    networks:
+      - almeida-network
+
+networks:
+  almeida-network:
+    external: bridge
