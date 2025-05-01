@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { toast } from "sonner";
 import { DocumentFile, DocumentShow } from "@/types/Document";
 
-const API_URL = "http://45.10.154.254:5000";
+const API_URL = process.env.REACT_APP_API_URL;
 const TOKEN_KEY = "token";
 
 export const useUserDocuments = (userId: number | null) => {

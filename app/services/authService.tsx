@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_URL = "http://45.10.154.254:5000";
+const API_URL = process.env.REACT_APP_API_URL;
 
 export const login = async (email: string, password: string) => {
   try {
@@ -9,6 +9,7 @@ export const login = async (email: string, password: string) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
+    console.log(response);
     if (!response.ok) throw new Error();
 
     const data = await response.json();
@@ -17,6 +18,7 @@ export const login = async (email: string, password: string) => {
 
     return data;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };
