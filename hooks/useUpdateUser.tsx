@@ -3,7 +3,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 import { toast } from "sonner";
 
-const API_URL = "https://almeida-pinturas.site";
 const TOKEN_KEY = "token";
 
 export const useUpdateUser = () => {
@@ -19,7 +18,7 @@ export const useUpdateUser = () => {
       const token = await AsyncStorage.getItem(TOKEN_KEY);
       if (!token) throw new Error();
 
-      const response = await fetch(`${API_URL}/Users`, {
+      const response = await fetch(`/Users`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

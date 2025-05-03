@@ -3,7 +3,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { toast } from "sonner";
 import { DocumentFile, DocumentShow } from "@/types/Document";
 
-const API_URL = "https://almeida-pinturas.site";
 const TOKEN_KEY = "token";
 
 export const useUserDocuments = (userId: number | null) => {
@@ -27,7 +26,7 @@ export const useUserDocuments = (userId: number | null) => {
       const token = await AsyncStorage.getItem(TOKEN_KEY);
       if (!token) throw new Error("Token não encontrado");
 
-      const response = await fetch(`${API_URL}/Documents/userId/${userId}`, {
+      const response = await fetch(`/Documents/userId/${userId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -61,7 +60,7 @@ export const useUserDocuments = (userId: number | null) => {
       formData.append("file", document.file);
 
       const response = await fetch(
-        `${API_URL}/Documents/user/${userId}/${document.expirationDate}`,
+        `/Documents/user/${userId}/${document.expirationDate}`,
         {
           method: "POST",
           headers: {
@@ -90,7 +89,7 @@ export const useUserDocuments = (userId: number | null) => {
       const token = await AsyncStorage.getItem(TOKEN_KEY);
       if (!token) throw new Error("Token não encontrado");
 
-      const response = await fetch(`${API_URL}/Documents/${documentId}`, {
+      const response = await fetch(`/Documents/${documentId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

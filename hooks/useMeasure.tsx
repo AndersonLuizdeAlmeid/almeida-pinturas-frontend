@@ -3,7 +3,6 @@ import { toast } from "sonner";
 import { CreateMeasureRequest } from "@/types/Measure";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_URL = "https://almeida-pinturas.site";
 const TOKEN_KEY = "token";
 
 export const useMeasure = () => {
@@ -19,7 +18,7 @@ export const useMeasure = () => {
       const token = await AsyncStorage.getItem(TOKEN_KEY);
       if (!token) throw new Error();
 
-      const res = await fetch(`${API_URL}/Measures/full`, {
+      const res = await fetch(`/Measures/full`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -48,7 +47,7 @@ export const useMeasure = () => {
       const token = await AsyncStorage.getItem(TOKEN_KEY);
       if (!token) throw new Error();
 
-      const res = await fetch(`${API_URL}/Measures/full`, {
+      const res = await fetch(`/Measures/full`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -75,7 +74,7 @@ export const useMeasure = () => {
       const token = await AsyncStorage.getItem(TOKEN_KEY);
       if (!token) throw new Error();
 
-      const res = await fetch(`${API_URL}/Measures/full/${id}`, {
+      const res = await fetch(`/Measures/full/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
