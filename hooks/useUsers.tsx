@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = "https://almeida-pinturas.site";
 const TOKEN_KEY = "token";
 
 export const useUsers = () => {

@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import { CreateMeasureRequest } from "@/types/Measure";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = "https://almeida-pinturas.site";
 const TOKEN_KEY = "token";
 
 export const useMeasure = () => {
