@@ -52,6 +52,15 @@ export default function CalculatePage() {
     fetchMeasures();
   }, [reload]);
 
+  useEffect(() => {
+    const loadInitial = async () => {
+      const result = await getMeasures();
+      setMeasures(result);
+    };
+
+    loadInitial();
+  }, []);
+
   const handleAddWall = () => {
     const parsedWidth = parseFloat(width);
     const parsedHeight = parseFloat(height);
@@ -168,7 +177,7 @@ export default function CalculatePage() {
               {/* Dialog para SALVAR CÁLCULO */}
               <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
+                  <Button className="w-full bg-emerald-600 text-foreground hover:bg-emerald-700">
                     Salvar Cálculo
                   </Button>
                 </DialogTrigger>
@@ -184,13 +193,14 @@ export default function CalculatePage() {
                   />
                   <div className="flex justify-end gap-2 pt-4">
                     <Button
+                      className="bg-foreground text-background hover:bg-foreground/80"
                       variant="outline"
                       onClick={() => setSaveDialogOpen(false)}
                     >
                       Cancelar
                     </Button>
                     <Button
-                      className="bg-emerald-600 hover:bg-emerald-700"
+                      className="bg-emerald-600 text-foreground hover:bg-emerald-700"
                       onClick={async () => {
                         await handleSave();
                         setSaveDialogOpen(false);
@@ -208,7 +218,7 @@ export default function CalculatePage() {
                 onOpenChange={setConfirmClearOpen}
               >
                 <DialogTrigger asChild>
-                  <Button className="w-full bg-red-600 hover:bg-red-700">
+                  <Button className="w-full bg-red-600 text-foreground hover:bg-red-700">
                     Limpar Tudo
                   </Button>
                 </DialogTrigger>
@@ -226,7 +236,7 @@ export default function CalculatePage() {
                       Cancelar
                     </Button>
                     <Button
-                      className="bg-red-600 hover:bg-red-700"
+                      className="bg-red-600 text-foreground hover:bg-red-700"
                       onClick={handleClearAll}
                     >
                       Confirmar

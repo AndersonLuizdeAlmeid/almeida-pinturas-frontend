@@ -36,31 +36,40 @@ export default function LoginScreen() {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gradient-to-b from-foreground via-foreground to-background">
-      <Card className="w-[350px]">
+    <div className="flex items-center justify-center h-screen bg-gradient-to-br from-foreground via-foreground to-background">
+      <Card className="w-[350px] bg-opacity-90 bg-white backdrop-blur-md shadow-lg rounded-2xl border border-gray-200 p-6">
         <CardHeader className="flex flex-col items-center justify-center">
           <img
             src="/assets/logo.jpeg"
             alt="Logo Almeida Pinturas"
-            className="w-40 h-auto mx-auto"
+            className="w-40 h-auto mx-auto mb-4 drop-shadow-lg"
           />
-          <CardTitle>ALMEIDA PINTURAS</CardTitle>
-          <CardDescription>Entrar</CardDescription>
+          <CardTitle className="text-foreground text-2xl font-bold mb-2">
+            ALMEIDA PINTURAS
+          </CardTitle>
+          <CardDescription className="text-foreground font-bold mb-2">
+            Entrar
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Email</Label>
+                <Label htmlFor="name" className="text-foreground">
+                  Email
+                </Label>
                 <Input
                   id="name"
                   placeholder="example@gmail.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className="border-gray-300 focus:border-foreground focus:ring-blue-500 rounded-lg"
                 />
               </div>
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Senha</Label>
+                <Label htmlFor="name" className="text-foreground">
+                  Senha
+                </Label>
                 <PasswordInput
                   id="password"
                   placeholder="Enter your password"
@@ -71,8 +80,13 @@ export default function LoginScreen() {
             </div>
           </form>
         </CardContent>
-        <CardFooter className=" items-center justify-center">
-          <Button onClick={handleLogin}>Entrar</Button>
+        <CardFooter className="flex items-center justify-center mt-4">
+          <Button
+            onClick={handleLogin}
+            className="w-full bg-foreground hover:bg-blue-700 text-white py-2 rounded-lg shadow-lg transition"
+          >
+            Entrar
+          </Button>
         </CardFooter>
       </Card>
     </div>

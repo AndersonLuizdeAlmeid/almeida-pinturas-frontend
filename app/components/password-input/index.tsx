@@ -27,7 +27,7 @@ export const PasswordInput = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className="w-full p-2 border border-gray-300 rounded-md text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-2 border border-gray-300 focus:border-gray-900 rounded-md text-sm placeholder-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500"
       />
       <button
         type="button"
