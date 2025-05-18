@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { redirect } from "next/navigation";
 
 export const login = async (email: string, password: string) => {
   try {
@@ -7,7 +8,6 @@ export const login = async (email: string, password: string) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
-    console.log(response);
     if (!response.ok) throw new Error();
 
     const data = await response.json();
@@ -23,6 +23,7 @@ export const login = async (email: string, password: string) => {
 
 export const logout = async () => {
   await AsyncStorage.removeItem("token");
+  redirect("/login");
 };
 
 export const getToken = async () => {

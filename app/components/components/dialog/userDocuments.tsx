@@ -19,6 +19,7 @@ import { Loader2, Trash2, Plus, Eye } from "lucide-react";
 import { DocumentFile, DocumentShow } from "@/types/Document";
 import UserDocumentsDialog from "./userDocumentsDialog";
 import { formatDateForInput } from "@/utils/dateUtils";
+import { openFile } from "@/utils/openFile";
 
 interface UserDocumentsProps {
   userId: number | null;
@@ -36,27 +37,7 @@ export default function UserDocuments({ userId }: UserDocumentsProps) {
   };
 
   const handleView = (doc: DocumentShow) => {
-    try {
-      // Extrai o conteúdo base64 puro (removendo o prefixo se existir)
-      const base64Data = doc.content.includes(",")
-        ? doc.content.split(",")[1]
-        : doc.content;
-
-      const byteCharacters = atob(base64Data);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
-      const byteArray = new Uint8Array(byteNumbers);
-
-      const blob = new Blob([byteArray], { type: doc.fileType });
-      const blobUrl = URL.createObjectURL(blob);
-
-      window.open(blobUrl, "_blank");
-    } catch (error) {
-      console.error("Erro ao abrir o documento:", error);
-      alert("Não foi possível visualizar o documento.");
-    }
+    openFile(doc.content);
   };
 
   useEffect(() => {

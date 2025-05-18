@@ -37,12 +37,12 @@ export default function LoginScreen() {
 
   return (
     <div className="flex items-center justify-center h-screen bg-gradient-to-br from-foreground via-foreground to-background">
-      <Card className="w-[350px] bg-opacity-90 bg-white backdrop-blur-md shadow-lg rounded-2xl border border-gray-200 p-6">
+      <Card className="w-[400px] bg-opacity-90 bg-white backdrop-blur-md shadow-lg rounded-2xl border border-gray-200 p-6">
         <CardHeader className="flex flex-col items-center justify-center">
           <img
-            src="/assets/logo.jpeg"
+            src="/assets/logo.png"
             alt="Logo Almeida Pinturas"
-            className="w-40 h-auto mx-auto mb-4 drop-shadow-lg"
+            className="w-50 h-auto mx-auto mb-4 drop-shadow-lg rounded-2xl"
           />
           <CardTitle className="text-foreground text-2xl font-bold mb-2">
             ALMEIDA PINTURAS
@@ -82,8 +82,8 @@ export default function LoginScreen() {
         </CardContent>
         <CardFooter className="flex items-center justify-center mt-4">
           <Button
-            onClick={handleLogin}
-            className="w-full bg-foreground hover:bg-blue-700 text-white py-2 rounded-lg shadow-lg transition"
+            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+            className="w-full bg-foreground hover:bg-foreground/80 text-white py-2 rounded-lg shadow-lg transition"
           >
             Entrar
           </Button>

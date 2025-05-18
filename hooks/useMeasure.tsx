@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { CreateMeasureRequest } from "@/types/Measure";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as authService from "./../app/services/authService";
 
 const TOKEN_KEY = "token";
 
@@ -27,7 +28,13 @@ export const useMeasure = () => {
         body: JSON.stringify(data),
       });
 
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        if (res.status === 401) {
+          authService.logout();
+          return;
+        }
+        throw new Error();
+      }
 
       setSuccess(true);
       toast.success("Medição salva com sucesso!");
@@ -55,7 +62,10 @@ export const useMeasure = () => {
         },
       });
 
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        authService.logout();
+        throw new Error();
+      }
       const data = await res.json();
       return data;
     } catch {
@@ -81,7 +91,13 @@ export const useMeasure = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        if (res.status === 401) {
+          authService.logout();
+          return;
+        }
+        throw new Error();
+      }
       toast.success("Medições apagadas com sucesso.");
       setSuccess(true);
     } catch {

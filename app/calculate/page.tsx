@@ -149,7 +149,7 @@ export default function CalculatePage() {
           Adicionar Cálculo
         </Button>
 
-        <div className="bg-white rounded-lg shadow p-4 space-y-4">
+        <Card className="shadow-lg rounded-xl bg-white p-6">
           <div>
             <h2 className="text-lg font-semibold">Paredes Adicionadas</h2>
             {walls.length === 0 ? (
@@ -305,7 +305,7 @@ export default function CalculatePage() {
               </ul>
             )}
           </div>
-        </div>
+        </Card>
       </div>
     </Layout>
   );

@@ -3,6 +3,7 @@ import { CreateUserRequest } from "@/types/User";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 import { toast } from "sonner";
+import * as authService from "./../app/services/authService";
 
 const TOKEN_KEY = "token";
 
@@ -27,6 +28,7 @@ export const useCreateUser = () => {
       });
 
       if (!response.ok) {
+        if (response.status === 401) authService.logout();
         throw new Error();
       }
 

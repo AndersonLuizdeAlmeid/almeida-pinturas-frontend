@@ -2,6 +2,7 @@ import { User } from "@/types/User";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import * as authService from "./../app/services/authService";
 
 const TOKEN_KEY = "token";
 
@@ -25,7 +26,10 @@ export const useUsers = () => {
         },
       });
 
-      if (!response.ok) throw new Error();
+      if (!response.ok) {
+        authService.logout();
+        throw new Error();
+      }
 
       const data = await response.json();
       setUsers(data);

@@ -1,25 +1,21 @@
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { toast } from "sonner";
-import { DocumentFile, DocumentShow } from "@/types/Document";
+import { Budget, BudgetShow } from "@/types/Budget";
 import * as authService from "./../app/services/authService";
 
 const TOKEN_KEY = "token";
 
-export const useUserDocuments = (userId: number | null) => {
-  const [documents, setDocuments] = useState<DocumentShow[]>([]);
+export const useBudgets = () => {
+  const [budgets, setBudgets] = useState<BudgetShow[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (userId) {
-      fetchDocuments();
-    }
-  }, [userId]);
+    fetchBudgets();
+  }, []);
 
-  const fetchDocuments = async () => {
-    if (!userId) return;
-
+  const fetchBudgets = async () => {
     setLoading(true);
     setError(null);
 
@@ -27,7 +23,7 @@ export const useUserDocuments = (userId: number | null) => {
       const token = await AsyncStorage.getItem(TOKEN_KEY);
       if (!token) throw new Error("Token não encontrado");
 
-      const response = await fetch(`/Documents/userId/${userId}`, {
+      const response = await fetch(`/Budgets`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -40,65 +36,67 @@ export const useUserDocuments = (userId: number | null) => {
           authService.logout();
           return;
         }
-        throw new Error("Erro ao buscar documentos");
+        throw new Error("Erro ao buscar orçamentos");
       }
 
       const data = await response.json();
-      setDocuments(data);
+      console.log(data);
+      setBudgets(data);
     } catch (err) {
-      toast.error("Erro ao buscar documentos do usuário.");
+      toast.error("Erro ao buscar orçamentos do usuário.");
       setError(err instanceof Error ? err.message : "Erro desconhecido");
     } finally {
       setLoading(false);
     }
   };
 
-  const addDocument = async (document: DocumentFile) => {
-    if (!userId) return;
+  const addBudget = async (budget: Budget) => {
     setLoading(true);
-
     try {
       const token = await AsyncStorage.getItem(TOKEN_KEY);
+
       if (!token) throw new Error("Token não encontrado");
 
+      // Monta o FormData
       const formData = new FormData();
-      formData.append("file", document.file);
+      formData.append("file", budget.content, budget.content.name);
+      formData.append("Id", budget.id);
+      formData.append("Name", budget.name);
+      formData.append("DateCreated", budget.dateCreated.toISOString());
 
-      const response = await fetch(
-        `/Documents/user/${userId}/${document.expirationDate}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        }
-      );
+      const response = await fetch(`/Budgets`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
 
       if (!response.ok) {
         if (response.status === 401) {
           authService.logout();
           return;
         }
-        throw new Error("Erro ao fazer upload do documento aaa");
+        throw new Error("Erro ao salvar o Orçamento");
       }
 
-      toast.success("Documento enviado com sucesso");
+      toast.success("Orçamento salvo com sucesso");
+      fetchBudgets();
     } catch (err) {
-      toast.error("Erro ao fazer upload do documento");
+      toast.error("Erro ao salvar o Orçamento");
+      console.log(err);
       setError(err instanceof Error ? err.message : "Erro desconhecido");
     } finally {
       setLoading(false);
     }
   };
 
-  const deleteDocument = async (documentId: string) => {
+  const deleteBudget = async (budgetId: string) => {
     try {
-      console.log(documentId);
       const token = await AsyncStorage.getItem(TOKEN_KEY);
       if (!token) throw new Error("Token não encontrado");
 
-      const response = await fetch(`/Documents/${documentId}`, {
+      const response = await fetch(`/Budgets/${budgetId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -110,23 +108,23 @@ export const useUserDocuments = (userId: number | null) => {
           authService.logout();
           return;
         }
-        throw new Error("Erro ao excluir documento");
+        throw new Error("Erro ao excluir o Orçamento");
       }
 
-      toast.success("Documento excluído com sucesso!");
-      setDocuments((prev) => prev.filter((doc) => doc.id !== documentId));
+      toast.success("Orçamento excluído com sucesso!");
+      setBudgets((prev) => prev.filter((budget) => budget.id !== budgetId));
     } catch (err) {
-      toast.error("Erro ao excluir documento.");
+      toast.error("Erro ao excluir o Orçamento.");
       setError(err instanceof Error ? err.message : "Erro desconhecido");
     }
   };
 
   return {
-    documents,
+    budgets,
     loading,
     error,
-    fetchDocuments,
-    addDocument,
-    deleteDocument,
+    fetchBudgets,
+    addBudget,
+    deleteBudget,
   };
 };

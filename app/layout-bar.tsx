@@ -37,6 +37,12 @@ export default function Layout({ children }: { children: ReactNode }) {
           >
             Calcular Medidas
           </Link>
+          <Link
+            href="/budget"
+            className="px-4 py-2 rounded-md hover:bg-white hover:text-blue-800 transition"
+          >
+            Orçamentos
+          </Link>
         </nav>
       </aside>
 

@@ -123,7 +123,7 @@ export default function UsersScreen() {
           </CardHeader>
         </Card>
 
-        <div className="w-full max-w-5xl mt-6 p-2 bg-white rounded-xl shadow-lg">
+        <div className="w-full max-w-5xl mt-6 p-2 bg-white rounded-xl shadow-lg border-2 border-black">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-10">
               <Loader2 className="animate-spin w-8 h-8 text-blue-500" />
