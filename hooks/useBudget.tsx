@@ -41,7 +41,7 @@ export const useBudgets = () => {
 
       const data = await response.json();
       console.log(data);
-      setBudgets(data);
+      if (data !== null) setBudgets(data);
     } catch (err) {
       toast.error("Erro ao buscar orçamentos do usuário.");
       setError(err instanceof Error ? err.message : "Erro desconhecido");
