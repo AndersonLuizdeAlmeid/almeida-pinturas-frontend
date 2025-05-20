@@ -1,4 +1,4 @@
-name: docker-publish-frontend
+name: Docker Publish Frontend
 
 on:
   push:
@@ -11,21 +11,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clonar projeto do GitHub
+      - name: Clonar projeto
         uses: actions/checkout@v3
 
-      - name: Fazer login no Docker Hub
+      - name: Login no Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Gerar imagem Docker do frontend
-        run: docker build -t andersonluizdealmeida1997/almeida-pinturas-frontend:latest .
-
-      - name: Tag a imagem com a versão do commit
+      # --- Frontend ---
+      - name: Build frontend (com logs detalhados)
         run: |
-          docker tag andersonluizdealmeida1997/almeida-pinturas-frontend:latest andersonluizdealmeida1997/almeida-pinturas-frontend:${{ github.sha }}
+          echo "📦 Iniciando build do frontend com logs completos..."
+          docker build --progress=plain \
+            -t andersonluizdealmeida1997/almeida-pinturas-frontend:latest \
+            .
+          echo "✅ Build do frontend concluído"
 
-      - name: Enviar imagem (latest) pro Docker Hub
-        run: docker push andersonluizdealmeida1997/almeida-pinturas-frontend:latest
+      - name: Tag frontend com SHA
+        run: |
+          echo "🏷️ Gerando tag SHA do frontend..."
+          docker tag andersonluizdealmeida1997/almeida-pinturas-frontend:latest \
+            andersonluizdealmeida1997/almeida-pinturas-frontend:${{ github.sha }}
+          echo "✅ Tag SHA gerada: ${{ github.sha }}"
 
-      - name: Enviar versão específica pro Docker Hub
-        run: docker push andersonluizdealmeida1997/almeida-pinturas-frontend:${{ github.sha }}
+      - name: Push frontend
+        run: |
+          echo "📤 Enviando imagem 'latest' do frontend..."
+          docker push andersonluizdealmeida1997/almeida-pinturas-frontend:latest
+          echo "📤 Enviando imagem com tag SHA do frontend..."
+          docker push andersonluizdealmeida1997/almeida-pinturas-frontend:${{ github.sha }}
+          echo "✅ Imagens do frontend enviadas com sucesso"
