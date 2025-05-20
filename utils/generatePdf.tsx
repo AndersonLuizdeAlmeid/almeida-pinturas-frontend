@@ -42,7 +42,7 @@ export const generatePDF = (budget: BudgetView) => {
   ];
   doc.setFontSize(12);
   doc.setTextColor("#000000");
-  clientInfo.forEach((line, idx) => {
+  clientInfo.forEach((line: string, idx: number) => {
     const w = doc.getTextWidth(line);
     doc.text(line, (pageWidth - w) / 2, 50 + idx * 8);
   });
@@ -56,7 +56,7 @@ export const generatePDF = (budget: BudgetView) => {
   doc.setFontSize(12);
   doc.setTextColor("#000000");
   const descLines = doc.splitTextToSize(description, pageWidth - 40);
-  descLines.forEach((line, idx) => {
+  descLines.forEach((line: string, idx: number) => {
     const w = doc.getTextWidth(line);
     doc.text(line, (pageWidth - w) / 2, 95 + idx * 6);
   });
