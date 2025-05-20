@@ -82,7 +82,7 @@ export default function LoginScreen() {
         </CardContent>
         <CardFooter className="flex items-center justify-center mt-4">
           <Button
-            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+            onClick={handleLogin}
             className="w-full bg-foreground hover:bg-foreground/80 text-white py-2 rounded-lg shadow-lg transition"
           >
             Entrar
