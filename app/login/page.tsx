@@ -40,7 +40,7 @@ export default function LoginScreen() {
       <Card className="w-[400px] bg-opacity-90 bg-white backdrop-blur-md shadow-lg rounded-2xl border border-gray-200 p-6">
         <CardHeader className="flex flex-col items-center justify-center">
           <img
-            src="/assets/logo.png"
+            src="/assets/Logo.png"
             alt="Logo Almeida Pinturas"
             className="w-50 h-auto mx-auto mb-4 drop-shadow-lg rounded-2xl"
           />
