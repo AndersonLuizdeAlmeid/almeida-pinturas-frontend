@@ -10,7 +10,6 @@ import { Input } from "@/app/components/components/ui/input";
 import { Button } from "@/app/components/components/ui/button";
 import { useState } from "react";
 import { DocumentFile } from "@/types/Document";
-import { formatDateForInput } from "@/utils/dateUtils";
 
 export default function UserDocumentsDialog({
   onSave,
@@ -83,7 +82,7 @@ export default function UserDocumentsDialog({
               id="expirationDate"
               type="date"
               name="expirationDate"
-              value={formatDateForInput(dateExpire)}
+              value={dateExpire}
               onChange={handleDateChange}
             />
           </div>
