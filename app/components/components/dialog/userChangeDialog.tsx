@@ -12,6 +12,7 @@ import { Button } from "@/app/components/components/ui/button";
 import { Edit } from "lucide-react";
 import { useEffect, useState } from "react";
 import { User } from "@/types/User";
+import { formatDateForInputDateField } from "@/utils/dateUtils";
 
 export default function UserChangeDialog({
   onSave,
@@ -141,7 +142,7 @@ export default function UserChangeDialog({
                 id="birthdayDate"
                 type="date"
                 name="birthdayDate"
-                value={userData.birthdayDate}
+                value={formatDateForInputDateField(userData.birthdayDate)}
                 onChange={handleChange}
               />
             </div>
