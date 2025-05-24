@@ -1,8 +1,12 @@
 export const formatDateForInput = (dateString?: string): string => {
   if (!dateString) return "";
 
-  const [day, month, year] = dateString.split("/");
-  if (!day || !month || !year) return "";
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return "";
 
-  return `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`;
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const year = date.getUTCFullYear();
+
+  return `${day}/${month}/${year}`;
 };
