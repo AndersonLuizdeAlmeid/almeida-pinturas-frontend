@@ -43,6 +43,12 @@ export default function Layout({ children }: { children: ReactNode }) {
           >
             Orçamentos
           </Link>
+          <Link
+            href="/location"
+            className="px-4 py-2 rounded-md hover:bg-white hover:text-blue-800 transition"
+          >
+            Horários
+          </Link>
         </nav>
       </aside>
 

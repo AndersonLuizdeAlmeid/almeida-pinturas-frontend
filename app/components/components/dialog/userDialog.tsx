@@ -10,7 +10,6 @@ import { Input } from "@/app/components/components/ui/input";
 import { Button } from "@/app/components/components/ui/button";
 import { useEffect, useState } from "react";
 import { User } from "@/types/User";
-import { formatDateForInputDateField } from "@/utils/dateUtils";
 
 export default function UserDialog({
   onSave,
@@ -148,7 +147,7 @@ export default function UserDialog({
               id="birthdayDate"
               type="date"
               name="birthdayDate"
-              value={formatDateForInputDateField(newUser.birthdayDate)}
+              value={newUser.birthdayDate}
               onChange={handleChange}
             />
           </div>
