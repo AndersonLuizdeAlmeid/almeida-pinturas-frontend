@@ -293,7 +293,7 @@ export default function WorkHoursPage() {
                               >
                                 <span>
                                   {wh.hours}h -{" "}
-                                  {new Date(wh.date).toLocaleDateString(
+                                  {new Date(wh.date ?? "").toLocaleDateString(
                                     "pt-BR"
                                   )}
                                 </span>
