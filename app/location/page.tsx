@@ -245,7 +245,7 @@ export default function WorkHoursPage() {
                       <div className="flex items-center gap-2">
                         <span className="text-sm text-gray-600">
                           {location.workHours?.reduce(
-                            (total, wh) => total + wh.hours,
+                            (total, wh) => total + (wh.hours ?? 0),
                             0
                           )}{" "}
                           horas
