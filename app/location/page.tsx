@@ -207,7 +207,8 @@ export default function WorkHoursPage() {
             onClick={handleAddWorkHours}
             disabled={
               !selectedLocationId ||
-              locations.find((l) => l.id === selectedLocationId)?.isFinished
+              locations.find((l) => l.id === selectedLocationId)?.isFinished ===
+                1
             }
           >
             Adicionar Horas
@@ -274,7 +275,7 @@ export default function WorkHoursPage() {
                               ? "text-gray-400 cursor-not-allowed"
                               : "text-red-600 hover:text-red-800"
                           }`}
-                          disabled={location.isFinished}
+                          disabled={location.isFinished === 1}
                         >
                           <Trash size={24} />
                         </button>
@@ -311,7 +312,7 @@ export default function WorkHoursPage() {
                                       ? "text-gray-400 cursor-not-allowed"
                                       : "text-red-600 hover:text-red-800"
                                   }`}
-                                  disabled={location.isFinished}
+                                  disabled={location.isFinished === 1}
                                 >
                                   <Trash size={16} />
                                 </button>
