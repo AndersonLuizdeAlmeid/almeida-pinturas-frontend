@@ -13,9 +13,6 @@ export const generatePDF = (budget: BudgetView) => {
     documentDate,
     items,
   } = budget;
-  console.log(clientName);
-  console.log(description);
-  console.log(items.length);
   if (!clientName || !description || items.length === 0) {
     toast.error("Preencha todas as informações antes de gerar o orçamento.");
     return;
@@ -25,7 +22,7 @@ export const generatePDF = (budget: BudgetView) => {
   const pageWidth = doc.internal.pageSize.getWidth();
 
   // Cabeçalho
-  const title = "ORÇAMENTO";
+  const title = "ORÇAMENTO - Almeida Pinturas";
   doc.setFillColor("gray");
   doc.rect(0, 0, pageWidth, 40, "F");
   doc.setFontSize(24);
